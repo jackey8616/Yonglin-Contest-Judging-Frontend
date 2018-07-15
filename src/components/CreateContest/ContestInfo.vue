@@ -1,19 +1,21 @@
 <template>
-  <div>
-    <div>
-      比賽名稱：
-      <input v-model="contestName" class="form-control" type="text"/>
-    </div>
-    <div class="row">
-      <div class="col-sm"></div>
-      <div class="col-sm"><button class="btn" @click="submitData">下一頁</button></div>
+  <div class="row">
+    <info :info="{contestName: this.contestName}" :editable="true"/>
+    <div class="col-md-8 offset-md-2">
+      <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm"><button class="btn btn-primary" @click="submitData">下一頁</button></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Info from '@/components/Contest/Info'
+
 export default {
   name: 'contest-info',
+  components: { Info },
   data () {
     return {
       contestName: null,
@@ -22,7 +24,7 @@ export default {
   },
   mounted () {
     let cache = this.$localStorage.fetch('create-contest-cache')['info']
-    console.log(cache)
+    // console.log(cache)
     if (cache !== undefined) {
       this.contestName = cache['contestName']
     }
