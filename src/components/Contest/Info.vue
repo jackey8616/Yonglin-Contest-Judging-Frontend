@@ -18,6 +18,26 @@
 <script>
 export default {
   name: 'contest-info',
-  props: [ 'title', 'info', 'editable' ]
+  props: [ 'title', 'info', 'editable' ],
+  watch: {
+    info: {
+      deep: true,
+      immediate: true,
+      handler () {
+        this.checkComplete()
+      }
+    }
+  },
+  methods: {
+    checkComplete: function () {
+      if (this.info.contestName === undefined || this.info.contestName.length === 0) {
+      } else {
+        this.$emit('completed', true)
+        return true
+      }
+      this.$emit('completed', false)
+      return false
+    }
+  }
 }
 </script>

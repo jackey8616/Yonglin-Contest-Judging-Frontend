@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-sm"><button v-if="slideIndex > 0" @click="prevSlide" class="btn">上一頁</button></div>
         <div class="col-sm">
-          <button v-if="slideIndex != keys.length" @click="nextSlide" class="btn btn-primary">下一頁</button>
+          <button v-if="slideIndex != keys.length" @click="nextSlide" :disabled="!slideEnable[keys[slideIndex]]" class="btn btn-primary">下一頁</button>
           <button v-else @click="submitToBackend" class="btn btn-success">送出</button>
         </div>
       </div>
@@ -12,11 +12,11 @@
     <div>
       <br>
       <swiper ref="swiper" :options="swiperOption">
-        <swiper-slide><info :title="'比賽資訊'" :info="componentData.info" :editable="true"/></swiper-slide>
-        <swiper-slide><judge :title="'評審匯入'" :judge="componentData.judge" :editable="true" :increasable="true"/></swiper-slide>
-        <swiper-slide><term :title="'評分項目匯入'" :term="componentData.term" :editable="true" :increasable="true"/></swiper-slide>
-        <swiper-slide><team :title="'參賽隊伍匯入'" :team="componentData.team" :editable="true" :increasable="true"/></swiper-slide>
-        <swiper-slide><final-check :form="componentData" @prev-slide="prevSlide"/></swiper-slide>
+        <swiper-slide><info ref="info" :title="'比賽資訊'" :info="componentData.info" :editable="true" @completed="checkComplete"/></swiper-slide>
+        <swiper-slide><judge ref="judge" :title="'評審匯入'" :judge="componentData.judge" :editable="true" :increasable="true" @completed="checkComplete"/></swiper-slide>
+        <swiper-slide><term ref="term" :title="'評分項目匯入'" :term="componentData.term" :editable="true" :increasable="true" @completed="checkComplete"/></swiper-slide>
+        <swiper-slide><team ref="team" :title="'參賽隊伍匯入'" :team="componentData.team" :editable="true" :increasable="true" @completed="checkComplete"/></swiper-slide>
+        <swiper-slide><final-check ref="final-check" :form="componentData" @prev-slide="prevSlide"/></swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
     </div>
@@ -40,6 +40,12 @@ export default {
       keys: [ 'info', 'judge', 'term', 'team' ],
       slideName: [ '比賽', '評審', '項目', '隊伍' ],
       slideIndex: 0,
+      slideEnable: {
+        info: false,
+        judge: false,
+        term: false,
+        team: false
+      },
       componentData: {
         info: {
           contestName: ''
@@ -90,23 +96,33 @@ export default {
     }
   },
   methods: {
+    checkComplete: function (flag) {
+      let key = this.keys[this.slideIndex]
+      this.slideEnable[key] = flag
+    },
     prevSlide: function () {
       if (this.$refs.swiper.swiper.slidePrev()) {
-        let cache = this.$localStorage.fetch('create-contest-cache')
+        let cache = this.$localStorage.fetch('create-contest-cache') || {}
         cache['slideIndex'] = --this.slideIndex
         this.$localStorage.save({ 'create-contest-cache': cache })
         // console.log(this.$localStorage.fetch())
       }
+      let key = this.keys[this.slideIndex]
+      this.$refs[key].checkComplete()
     },
     nextSlide: function () {
       if (this.$refs.swiper.swiper.slideNext()) {
         let movingKey = this.keys[this.slideIndex]
-        let cache = this.$localStorage.fetch('create-contest-cache')
+        let cache = this.$localStorage.fetch('create-contest-cache') || {}
         cache[movingKey] = this.componentData[movingKey]
         cache['slideIndex'] = ++this.slideIndex
         this.$localStorage.save({ 'create-contest-cache': cache })
         // console.log(this.$localStorage.fetch())
         this.$toasted.success(this.slideName[this.slideIndex - 1] + '資料已成功加入暫存！')
+      }
+      if (this.slideIndex !== this.keys.length) {
+        let key = this.keys[this.slideIndex]
+        this.$refs[key].checkComplete()
       }
     },
     submitToBackend: function () {

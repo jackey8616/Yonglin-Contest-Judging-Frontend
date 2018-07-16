@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import HelloWorld from '@/components/HelloWorld'
-import CreateContest from '@/components/CreateContest/CreateContest'
+import CreateContest from '@/components/Contest/Create/CreateContest'
 
 Vue.use(Router)
 

@@ -106,7 +106,25 @@ export default {
       }
     }
   },
+  watch: {
+    term: {
+      deep: true,
+      immediate: true,
+      handler () {
+        this.checkComplete()
+      }
+    }
+  },
   methods: {
+    checkComplete: function () {
+      if (this.term.terms === undefined || this.term.terms.length === 0) {
+      } else {
+        this.$emit('completed', true)
+        return true
+      }
+      this.$emit('completed', false)
+      return false
+    },
     getContorlClass: function (isInvalid) {
       return {
         'form-control': true,

@@ -10,7 +10,7 @@ import 'bootstrap/scss/bootstrap.scss'
 import 'bootstrap'
 import Toasted from 'vue-toasted'
 
-import CreateContest from '@/components/CreateContest/CreateContest'
+import CreateContest from '@/components/Contest/Create/CreateContest'
 
 Vue.config.productionTip = false
 Vue.prototype.$localStorage = LocalStorage
