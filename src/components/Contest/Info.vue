@@ -7,17 +7,16 @@
       <div v-if="info !== null" class="col-md-8 offset-md-2">
         <div class="form-inline">
           比賽名稱：
-          <input v-if="editable" v-model="info.contestName" class="form-control" type="text"/>
-          <div v-else>{{ info.contestName }}</div>
+          <input v-model="info.contestName" :disabled="!editable" class="form-control" type="text"/>
         </div>
         <div class="form-inline">
           開始時間：
-          <vue-datepicker-local v-if="editable" v-model="info.startDate" inputClass="form-control" @confirm="checkDateValid" show-buttons :disabled="!editable"/>
+          <vue-datepicker-local v-model="info.startDate" inputClass="form-control" @confirm="checkDateValid" show-buttons :disabled="!editable"/>
           <div v-if="!dateValid" style="color: RED;">日期或日期範圍有誤！</div>
         </div>
         <div class="form-inline">
           結束時間：
-          <vue-datepicker-local v-if="editable" v-model="info.endDate" inputClass="form-control" @confirm="checkDateValid" show-buttons :disabled="!editable"/>
+          <vue-datepicker-local v-model="info.endDate" inputClass="form-control" @confirm="checkDateValid" show-buttons :disabled="!editable"/>
           <div v-if="!dateValid" style="color: RED;">日期或日期範圍有誤！</div>
         </div>
       </div>
@@ -57,8 +56,15 @@ export default {
       this.$emit('completed', false)
       return false
     },
+    zoneDate: function (date) {
+      return this.$moment.tz(date, 'Asia/Taipei').format('YYYY-MM-DD')
+    },
     checkDateValid: function () {
-      this.dateValid = !(this.info.startDate > this.info.endDate)
+      if (this.info.startDate !== null && this.info.endDate !== null) {
+        this.dateValid = !(this.info.startDate > this.info.endDate)
+        this.info.startDate = this.zoneDate(this.info.startDate)
+        this.info.endDate = this.zoneDate(this.info.endDate)
+      }
       return this.dateValid
     }
   }

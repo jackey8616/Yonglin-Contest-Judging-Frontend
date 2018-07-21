@@ -2,9 +2,11 @@
   <div style="height: 100%;">
     <div>
       <div class="row">
-        <div class="col-sm"><button v-if="slideIndex > 0" @click="prevSlide" class="btn">上一頁</button></div>
         <div class="col-sm">
+          <button v-if="slideIndex > 0" @click="prevSlide" class="btn">上一頁</button>
           <button class="btn btn-danger" @click="cancelCreate">取消</button>
+        </div>
+        <div class="col-sm">
           <button v-if="slideIndex != keys.length" @click="nextSlide" :disabled="!slideEnable[keys[slideIndex]]" class="btn btn-primary">下一頁</button>
           <button v-else @click="submitToBackend" class="btn btn-success">送出</button>
         </div>
@@ -106,6 +108,7 @@ export default {
     cancelCreate: function () {
       this.$localStorage.clear('create-contest-cache')
       this.$toasted.info('比賽已取消建立, 暫存清空!')
+      this.$router.push({ path: '/' })
     },
     prevSlide: function () {
       if (this.$refs.swiper.swiper.slidePrev()) {
@@ -135,15 +138,20 @@ export default {
     submitToBackend: function () {
       this.$ajax({
         'method': 'POST',
-        'url': 'http://192.168.0.7:8000/api/create-contest',
+        'url': 'http://' + this.$backend + '/api/contest/create',
         'params': this.componentData
       }).then(response => {
-        this.$toasted.success('送出成功！')
-        this.$localStorage.clear('create-contest-cache')
-        console.log(response.data)
+        if (response.data.status === 'success') {
+          this.$toasted.success('送出成功！')
+          this.$localStorage.clear('create-contest-cache')
+          this.$router.push({ path: '/contest-summary/' + this.info.contestName })
+        } else if (response.data.status === 'failed') {
+          this.$toasted.error('送出失敗！')
+          console.log(response.data.detail)
+        }
       }).catch(response => {
         console.log(response.data)
-        this.$toasted.error('發生錯誤：' + response)
+        this.$toasted.error('發生錯誤：' + response.data)
       })
     }
   }

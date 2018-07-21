@@ -20,7 +20,7 @@ export default new Router({
       component: ContestCreate
     },
     {
-      path: '/contest-summary',
+      path: '/contest-summary/:contestName?',
       name: 'ContestSummary',
       component: ContestSummary
     }

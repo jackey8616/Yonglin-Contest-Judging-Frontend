@@ -1,9 +1,9 @@
 <template>
   <div>
     <div>
-      <query @selectedContest="fetchData"/>
+      <query @selectedContest="fetchSelect"/>
     </div>
-    <div>
+    <div v-if="contest !== null">
       <swiper ref="swiper" :options="swiperOptions">
       </swiper>
     </div>
@@ -22,8 +22,16 @@ import Team from '@/components/Contest/Team'
 export default {
   name: 'contest-summary',
   components: { swiper, swiperSlide, Query, Info, Judge, Term, Team },
+  mounted () {
+    if (this.$route.params.contestName !== undefined) {
+      this.contestName = this.$route.params.contestName
+      this.fetchData()
+    }
+  },
   data () {
     return {
+      contestName: null,
+      contest: null,
       swiperOptions: {
         allowTouchMove: false,
         pagination: {
@@ -34,8 +42,24 @@ export default {
     }
   },
   methods: {
-    fetchData: function (selectedContest) {
-      console.log('Selected Contest')
+    fetchSelect: function (selectedContest) {
+      this.contestName = selectedContest
+      this.fetchData()
+    },
+    fetchData: function () {
+      this.$ajax({
+        'method': 'GET',
+        'url': 'http://' + this.$backend + '/api/contest/info?' + this.contestName
+      }).then(response => {
+        if (response.data.status === 'success') {
+          this.$toasted.success('成功獲取比賽資料！')
+          this.contest = response.data.data
+        } else if (response.data.status === 'failed') {
+          this.$toasted.error('獲取比賽資料失敗！')
+        }
+      }).catch(response => {
+
+      })
     }
   }
 }
