@@ -78,7 +78,7 @@ library.add(
 )
 
 export default {
-  name: 'contest-judge',
+  name: 'judge',
   props: [ 'title', 'judge', 'editable', 'increasable' ],
   components: { FontAwesomeIcon },
   data () {

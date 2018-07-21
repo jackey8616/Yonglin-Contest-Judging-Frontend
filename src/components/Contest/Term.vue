@@ -86,7 +86,7 @@ library.add(
 )
 
 export default {
-  name: 'contest-term',
+  name: 'term',
   props: [ 'title', 'term', 'editable', 'increasable' ],
   components: { FontAwesomeIcon },
   data () {

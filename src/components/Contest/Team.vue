@@ -66,7 +66,7 @@ library.add(
 )
 
 export default {
-  name: 'contest-team',
+  name: 'team',
   props: [ 'title', 'team', 'editable', 'increasable' ],
   components: { FontAwesomeIcon },
   data () {

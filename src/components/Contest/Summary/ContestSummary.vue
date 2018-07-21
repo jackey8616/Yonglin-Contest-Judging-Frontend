@@ -3,8 +3,23 @@
     <div>
       <query @selectedContest="fetchSelect"/>
     </div>
+    <div>
+      <div class="row">
+        <div class="col-sm">
+          <button v-if="slideIndex > 0" @click="prevSlide" class="btn">上一頁</button>
+        </div>
+        <div class="col-sm">
+          <button v-if="slideIndex != keys.length" @click="nextSlide" class="btn btn-primary">下一頁</button>
+        </div>
+      </div>
+    </div>
     <div v-if="contest !== null">
       <swiper ref="swiper" :options="swiperOptions">
+        <swiper-slide><info ref="info" :title="'比賽資訊'" :info="contest.info" :editable="false"/></swiper-slide>
+        <swiper-slide><judge ref="judge" :title="'評審資訊'" :judge="contest.judge" :editable="false" :increasable="false"/></swiper-slide>
+        <swiper-slide><term ref="term" :title="'評分項目資訊'" :term="contest.term" :editable="false" :increasable="false"/></swiper-slide>
+        <swiper-slide><team ref="team" :title="'參賽隊伍資訊'" :team="contest.team" :editable="false" :increasable="false"/></swiper-slide>
+        <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
     </div>
   </div>
@@ -30,6 +45,8 @@ export default {
   },
   data () {
     return {
+      keys: [ 'info', 'judge', 'term', 'team' ],
+      slideIndex: 0,
       contestName: null,
       contest: null,
       swiperOptions: {
@@ -60,6 +77,17 @@ export default {
       }).catch(response => {
 
       })
+    },
+    prevSlide: function () {
+      if (this.$refs.swiper.swiper.slidePrev()) {
+        --this.slideIndex
+      }
+    },
+    nextSlide: function () {
+      if (this.$refs.swiper.swiper.slideNext()) {
+        ++this.slideIndex
+        // console.log(this.$localStorage.fetch())
+      }
     }
   }
 }

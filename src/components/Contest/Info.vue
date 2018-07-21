@@ -28,7 +28,7 @@
 import VueDatepickerLocal from 'vue-datepicker-local'
 
 export default {
-  name: 'contest-info',
+  name: 'info',
   props: [ 'title', 'info', 'editable' ],
   components: { VueDatepickerLocal },
   data () {
