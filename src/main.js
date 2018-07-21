@@ -10,7 +10,7 @@ import 'bootstrap/scss/bootstrap.scss'
 import 'bootstrap'
 import Toasted from 'vue-toasted'
 
-import CreateContest from '@/components/Contest/Create/CreateContest'
+import ContestCreate from '@/components/Contest/Create/ContestCreate'
 
 Vue.config.productionTip = false
 Vue.prototype.$localStorage = LocalStorage
@@ -18,7 +18,7 @@ Vue.prototype.$ajax = Axios
 
 Vue.use(Toasted, { theme: 'bubble', position: 'bottom-right', duration: 2500 })
 
-Vue.component('create-contest', CreateContest)
+Vue.component('contest-create', ContestCreate)
 
 /* eslint-disable no-new */
 new Vue({

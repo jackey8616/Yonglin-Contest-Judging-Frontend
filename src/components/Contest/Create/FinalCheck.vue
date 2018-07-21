@@ -11,6 +11,8 @@
           <dd>
             <dl>
               <dt>名稱</dt><dd>{{ form.info.contestName }}</dd>
+              <dt>開始日期</dt><dd>{{ form.info.startDate }}</dd>
+              <dt>結束日期</dt><dd>{{ form.info.endDate }}</dd>
             </dl>
           </dd>
         </dl>

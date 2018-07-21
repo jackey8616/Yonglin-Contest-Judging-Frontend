@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <img src="./assets/yonglin-logo.png">
     <router-view/>
     <router-view name="create-contest"/>
   </div>

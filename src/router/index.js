@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import HelloWorld from '@/components/HelloWorld'
-import CreateContest from '@/components/Contest/Create/CreateContest'
+import ContestCreate from '@/components/Contest/Create/ContestCreate'
+import ContestSummary from '@/components/Contest/Summary/ContestSummary'
 
 Vue.use(Router)
 
@@ -14,9 +15,14 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/create-contest',
-      name: 'CreateContest',
-      component: CreateContest
+      path: '/contest-create',
+      name: 'ContestCreate',
+      component: ContestCreate
+    },
+    {
+      path: '/contest-summary',
+      name: 'ContestSummary',
+      component: ContestSummary
     }
   ]
 })

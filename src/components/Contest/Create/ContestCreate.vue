@@ -1,17 +1,18 @@
 <template>
-  <div>
-    <div class="col-md-8 offset-md-2">
+  <div style="height: 100%;">
+    <div>
       <div class="row">
         <div class="col-sm"><button v-if="slideIndex > 0" @click="prevSlide" class="btn">上一頁</button></div>
         <div class="col-sm">
+          <button class="btn btn-danger" @click="cancelCreate">取消</button>
           <button v-if="slideIndex != keys.length" @click="nextSlide" :disabled="!slideEnable[keys[slideIndex]]" class="btn btn-primary">下一頁</button>
           <button v-else @click="submitToBackend" class="btn btn-success">送出</button>
         </div>
       </div>
     </div>
-    <div>
+    <div style="height: 100%;">
       <br>
-      <swiper ref="swiper" :options="swiperOption">
+      <swiper ref="swiper" :options="swiperOptions" style="height: 100%;">
         <swiper-slide><info ref="info" :title="'比賽資訊'" :info="componentData.info" :editable="true" @completed="checkComplete"/></swiper-slide>
         <swiper-slide><judge ref="judge" :title="'評審匯入'" :judge="componentData.judge" :editable="true" :increasable="true" @completed="checkComplete"/></swiper-slide>
         <swiper-slide><term ref="term" :title="'評分項目匯入'" :term="componentData.term" :editable="true" :increasable="true" @completed="checkComplete"/></swiper-slide>
@@ -33,7 +34,7 @@ import Team from '@/components/Contest/Team'
 import FinalCheck from './FinalCheck'
 
 export default {
-  name: 'create-contest',
+  name: 'contest-create',
   components: { swiper, swiperSlide, Info, Judge, Term, Team, FinalCheck },
   data () {
     return {
@@ -48,7 +49,9 @@ export default {
       },
       componentData: {
         info: {
-          contestName: ''
+          contestName: '',
+          startDate: null,
+          endDate: null
         },
         judge: {
           judges: []
@@ -60,7 +63,7 @@ export default {
           teams: []
         }
       },
-      swiperOption: {
+      swiperOptions: {
         allowTouchMove: false,
         pagination: {
           el: '.swiper-pagination',
@@ -100,6 +103,10 @@ export default {
       let key = this.keys[this.slideIndex]
       this.slideEnable[key] = flag
     },
+    cancelCreate: function () {
+      this.$localStorage.clear('create-contest-cache')
+      this.$toasted.info('比賽已取消建立, 暫存清空!')
+    },
     prevSlide: function () {
       if (this.$refs.swiper.swiper.slidePrev()) {
         let cache = this.$localStorage.fetch('create-contest-cache') || {}
@@ -135,6 +142,7 @@ export default {
         this.$localStorage.clear('create-contest-cache')
         console.log(response.data)
       }).catch(response => {
+        console.log(response.data)
         this.$toasted.error('發生錯誤：' + response)
       })
     }
