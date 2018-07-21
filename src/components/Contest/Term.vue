@@ -161,12 +161,14 @@ export default {
       }
     },
     editTerm: function (index) {
+      let oldVal = this.term.terms[index].name
       this.term.terms[index] = {
         'id': this.edit.id,
         'name': this.edit.name,
         'weight': this.edit.weight,
         'depend': this.edit.depend
       }
+      this.updateTerm(oldVal, this.edit.name)
       this.edit = {
         index: null,
         id: null,
@@ -185,6 +187,13 @@ export default {
       for (let i = 0; i < this.term.terms.length; ++i) {
         this.term.terms[i].id = i
       }
+    },
+    updateTerm: function (oldVal, newVal) {
+      this.term.terms.forEach((element, index) => {
+        if (this.term.terms[index].depend === oldVal) {
+          this.term.terms[index].depend = newVal
+        }
+      })
     },
     nameInvalid: function (id, name) {
       for (let i = 0; i < this.term.terms.length; ++i) {

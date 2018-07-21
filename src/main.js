@@ -15,7 +15,8 @@ import moment from 'moment-timezone'
 import ContestCreate from '@/components/Contest/Create/ContestCreate'
 
 Vue.config.productionTip = false
-Vue.prototype.$backend = '192.168.0.7:8000'
+// Vue.prototype.$backend = '192.168.0.7:8000'
+Vue.prototype.$backend = '127.0.0.1:8000'
 Vue.prototype.$localStorage = LocalStorage
 Vue.prototype.$ajax = Axios
 

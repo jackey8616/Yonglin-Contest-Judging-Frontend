@@ -16,8 +16,8 @@
       <br>
       <swiper ref="swiper" :options="swiperOptions" style="height: 100%;">
         <swiper-slide><info ref="info" :title="'比賽資訊'" :info="componentData.info" :editable="true" @completed="checkComplete"/></swiper-slide>
-        <swiper-slide><judge ref="judge" :title="'評審匯入'" :judge="componentData.judge" :editable="true" :increasable="true" @completed="checkComplete"/></swiper-slide>
         <swiper-slide><term ref="term" :title="'評分項目匯入'" :term="componentData.term" :editable="true" :increasable="true" @completed="checkComplete"/></swiper-slide>
+        <swiper-slide><judge ref="judge" :title="'評審匯入'" :judge="componentData.judge" :terms="componentData.term.terms" :editable="true" :increasable="true" @completed="checkComplete"/></swiper-slide>
         <swiper-slide><team ref="team" :title="'參賽隊伍匯入'" :team="componentData.team" :editable="true" :increasable="true" @completed="checkComplete"/></swiper-slide>
         <swiper-slide><final-check ref="final-check" :form="componentData" @prev-slide="prevSlide"/></swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
@@ -40,13 +40,13 @@ export default {
   components: { swiper, swiperSlide, Info, Judge, Term, Team, FinalCheck },
   data () {
     return {
-      keys: [ 'info', 'judge', 'term', 'team' ],
-      slideName: [ '比賽', '評審', '項目', '隊伍' ],
+      keys: [ 'info', 'term', 'judge', 'team' ],
+      slideName: [ '比賽', '項目', '評審', '隊伍' ],
       slideIndex: 0,
       slideEnable: {
         info: false,
-        judge: false,
         term: false,
+        judge: false,
         team: false
       },
       componentData: {
@@ -55,11 +55,11 @@ export default {
           startDate: null,
           endDate: null
         },
-        judge: {
-          judges: []
-        },
         term: {
           terms: []
+        },
+        judge: {
+          judges: []
         },
         team: {
           teams: []
@@ -81,8 +81,8 @@ export default {
       this.slideIndex = cache['slideIndex']
       this.componentData = {
         info: cache['info'],
-        judge: cache['judge'],
         term: cache['term'],
+        judge: cache['judge'],
         team: cache['team']
       }
       for (let i = 0; i < this.slideIndex; ++i) {
@@ -93,8 +93,8 @@ export default {
       cache = {}
       cache['slideIndex'] = this.slideIndex
       cache['info'] = this.componentData.info
-      cache['judge'] = this.componentData.judge
       cache['term'] = this.componentData.term
+      cache['judge'] = this.componentData.judge
       cache['team'] = this.componentData.team
       this.$localStorage.save({ 'create-contest-cache': cache })
       this.$toasted.info('建立新比賽！')
@@ -144,13 +144,12 @@ export default {
         if (response.data.status === 'success') {
           this.$toasted.success('送出成功！')
           this.$localStorage.clear('create-contest-cache')
-          this.$router.push({ path: '/contest-summary/' + this.info.contestName })
+          this.$router.push({ path: '/contest-summary/' + this.componentData.info.contestName })
         } else if (response.data.status === 'failed') {
           this.$toasted.error('送出失敗！')
           console.log(response.data.detail)
         }
       }).catch(response => {
-        console.log(response.data)
         this.$toasted.error('發生錯誤：' + response.data)
       })
     }

@@ -11,6 +11,7 @@
             <td>#</td>
             <td>姓名</td>
             <td>信箱</td>
+            <td>評分項目</td>
           </tr>
         </thead>
         <tbody>
@@ -25,11 +26,12 @@
             <td>{{ judge.id }}</td>
             <td>{{ judge.name }}</td>
             <td>{{ judge.email }}</td>
+            <td>{{ judge.term.toString() }}</td>
           </tr>
           <tr v-else>
             <td v-if="editable || increasable">
               <div v-if="editable">
-                <button @click="editJudge(index)" :disabled="nameDuplicate || emailDuplicate" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'check-circle']"/> 確認</button>
+                <button @click="editJudge(index)" :disabled="edit.term.length == 0 || nameDuplicate || emailDuplicate" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'check-circle']"/> 確認</button>
                 /
                 <button @click="cancelEdit()" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'times-circle']"/> 取消</button>
               </div>
@@ -43,10 +45,20 @@
               <input v-model="edit.email" :class="getContorlClass(emailDuplicate = emailInvalid(edit.id, edit.email))" type="email" placeholder="信箱"/>
               <div v-if="emailDuplicate" style="color: RED;">信箱重複或非法的信箱格式！</div>
             </td>
+            <td>
+              <p>{{ edit.term.toString() }}</p>
+              <select v-model="selectedTerm">
+                <option v-for="term in terms" :key="term.name">
+                  {{ term.name }}
+                </option>
+              </select>
+              <button @click="modifyTerm('Edit', 'Add')" :disabled="selectedTerm === null" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'plus-circle']"/></button>
+              <button @click="modifyTerm('Edit', 'Remove')" :disabled="selectedTerm === null" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'minus-circle']"/></button>
+            </td>
           </tr>
           <tr v-if="edit.index === null && increasable">
             <td v-if="editable || increasable">
-              <button @click="addJudge()" :disabled="add.name == null || add.email == null || nameDuplicate || emailDuplicate" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'plus-circle']"/> 新增</button>
+              <button @click="addJudge()" :disabled="add.name == null || add.email == null || add.term.length == 0 || nameDuplicate || emailDuplicate" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'plus-circle']"/> 新增</button>
             </td>
             <td>{{ judge.judges.length }}</td>
             <td>
@@ -56,6 +68,16 @@
             <td>
               <input v-model="add.email" :class="getContorlClass(emailDuplicate = emailInvalid(add.id, add.email))" type="email" placeholder="信箱"/>
               <div v-if="emailDuplicate" style="color: RED;">信箱重複或非法的信箱格式！</div>
+            </td>
+            <td>
+              <p>{{ add.term.toString() }}</p>
+              <select v-model="selectedTerm">
+                <option v-for="term in terms" :key="term.name">
+                  {{ term.name }}
+                </option>
+              </select>
+              <button @click="modifyTerm('Add', 'Add')" :disabled="selectedTerm === null" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'plus-circle']"/></button>
+              <button @click="modifyTerm('Add', 'Remove')" :disabled="selectedTerm === null" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'minus-circle']"/></button>
             </td>
           </tr>
         </tbody>
@@ -79,22 +101,25 @@ library.add(
 
 export default {
   name: 'judge',
-  props: [ 'title', 'judge', 'editable', 'increasable' ],
+  props: [ 'title', 'judge', 'terms', 'editable', 'increasable' ],
   components: { FontAwesomeIcon },
   data () {
     return {
       nameDuplicate: false,
       emailDuplicate: false,
+      selectedTerm: null,
       add: {
         id: null,
         name: null,
-        email: null
+        email: null,
+        term: []
       },
       edit: {
         index: null,
         id: null,
         name: null,
-        email: null
+        email: null,
+        term: []
       }
     }
   },
@@ -130,36 +155,63 @@ export default {
       this.judge.judges.push({
         'id': this.judge.judges.length,
         'name': this.add.name,
-        'email': this.add.email
+        'email': this.add.email,
+        'term': this.add.term
       })
-      this.add = { id: null, name: null, email: null }
+      this.add = { id: null, name: null, email: null, term: [] }
       this.$toasted.success('評審資料成功加入表格！')
+    },
+    modifyTerm: function (index, action) {
+      if (action === 'Add') {
+        if (index === 'Add' && !this.add.term.includes(this.selectedTerm)) {
+          this.add.term.push(this.selectedTerm)
+        } else if (index === 'Edit' && !this.edit.term.includes(this.selectedTerm)) {
+          this.edit.term.push(this.selectedTerm)
+        } else {
+          this.$toasted.info('該評分項目已存在於該評審負責項目中！')
+        }
+      } else if (action === 'Remove') {
+        if (index === 'Add' && this.add.term.includes(this.selectedTerm)) {
+          let i = this.add.term.indexOf(this.selectedTerm)
+          this.add.term.splice(i, 1)
+        } else if (index === 'Edit' && this.edit.term.includes(this.selectedTerm)) {
+          let i = this.edit.term.indexOf(this.selectedTerm)
+          this.edit.term.splice(i, 1)
+        } else {
+          this.$toasted.info('該評分項目不存在於該評審負責項目中！')
+        }
+      }
+      this.selectedTerm = null
     },
     selectEdit: function (index) {
       this.edit.index = index
       this.edit.id = this.judge.judges[index].id
       this.edit.name = this.judge.judges[index].name
       this.edit.email = this.judge.judges[index].email
+      this.edit.term = this.judge.judges[index].term
     },
     cancelEdit: function () {
       this.edit = {
         index: null,
         id: null,
         name: null,
-        email: null
+        email: null,
+        term: []
       }
     },
     editJudge: function (index) {
       this.judge.judges[index] = {
         'id': this.edit.id,
         'name': this.edit.name,
-        'email': this.edit.email
+        'email': this.edit.email,
+        'term': this.edit.term
       }
       this.edit = {
         index: null,
         id: null,
         name: null,
-        email: null
+        email: null,
+        term: []
       }
       this.$toasted.success('評審資料編輯成功！')
     },

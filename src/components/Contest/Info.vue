@@ -7,7 +7,8 @@
       <div v-if="info !== null" class="col-md-8 offset-md-2">
         <div class="form-inline">
           比賽名稱：
-          <input v-model="info.contestName" :disabled="!editable" class="form-control" type="text"/>
+          <input v-model="info.contestName" @change="checkNameDuplicate" :disabled="!editable" class="form-control" type="text"/>
+          <div v-if="nameDuplicated" style="color: RED;">比賽名稱重複！</div>
         </div>
         <div class="form-inline">
           開始時間：
@@ -33,6 +34,7 @@ export default {
   components: { VueDatepickerLocal },
   data () {
     return {
+      nameDuplicated: false,
       dateValid: true
     }
   },
@@ -58,6 +60,17 @@ export default {
     },
     zoneDate: function (date) {
       return this.$moment.tz(date, 'Asia/Taipei').format('YYYY-MM-DD')
+    },
+    checkNameDuplicate: function () {
+      this.$ajax({
+        method: 'POST',
+        url: 'http://' + this.$backend + '/api/contest/check-duplicate',
+        params: { 'info.contestName': this.info.contestName }
+      }).then(response => {
+        this.nameDuplicated = response.data.data.length !== 0
+      }).catch(response => {
+        this.$toasted.error('檢查重名失敗！')
+      })
     },
     checkDateValid: function () {
       if (this.info.startDate !== null && this.info.endDate !== null) {

@@ -17,16 +17,6 @@
           </dd>
         </dl>
         <dl>
-          <dt>評審資訊</dt>
-          <dd>
-            <dl v-for="judge in form.judge.judges" :key="judge.id">
-              <dt>#</dt><dd>{{ judge.id }}</dd>
-              <dt>姓名</dt><dd>{{ judge.name }}</dd>
-              <dt>信箱</dt><dd>{{ judge.email }}</dd>
-            </dl>
-          </dd>
-        </dl>
-        <dl>
           <dt>評分項目</dt>
           <dd>
             <dl v-for="term in form.term.terms" :key="term.id">
@@ -34,6 +24,17 @@
               <dt>名稱</dt><dd>{{ term.name }}</dd>
               <dt>權重</dt><dd>{{ term.weight }}</dd>
               <dt v-if="term.depend !== null">相依</dt><dd>{{ term.depend }}</dd>
+            </dl>
+          </dd>
+        </dl>
+        <dl>
+          <dt>評審資訊</dt>
+          <dd>
+            <dl v-for="judge in form.judge.judges" :key="judge.id">
+              <dt>#</dt><dd>{{ judge.id }}</dd>
+              <dt>姓名</dt><dd>{{ judge.name }}</dd>
+              <dt>信箱</dt><dd>{{ judge.email }}</dd>
+              <dt>評分項目</dt><dd>{{ judge.term.toString() }}</dd>
             </dl>
           </dd>
         </dl>

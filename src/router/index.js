@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import ContestCreate from '@/components/Contest/Create/ContestCreate'
 import ContestSummary from '@/components/Contest/Summary/ContestSummary'
+import ContestMark from '@/components/Contest/Mark/ContestMark'
 
 Vue.use(Router)
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/contest-summary/:contestName?',
       name: 'ContestSummary',
       component: ContestSummary
+    },
+    {
+      path: '/contest-mark/:judgeEmail',
+      name: 'ContestMark',
+      component: ContestMark
     }
   ]
 })
