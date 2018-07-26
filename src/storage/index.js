@@ -1,5 +1,5 @@
 
-const STORAGE_KEY = 'ycvf-chache'
+const STORAGE_KEY = 'ycjf'
 
 export default {
   fetch: function (key = null) {

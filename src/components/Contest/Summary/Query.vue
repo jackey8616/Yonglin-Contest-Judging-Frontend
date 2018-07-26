@@ -4,7 +4,8 @@
     <select v-model="selectedContest" class="form-control">
       <option v-for="contest in contestList" :key="contest">{{ contest }}</option>
     </select>
-    <button class="btn btn-sm" @click="selectContest">送出</button>
+    <button @click="$router.go(-1)" class="btn btn-md btn-danger">回上頁</button>
+    <button class="btn btn-md" @click="selectContest">送出</button>
   </div>
 </template>
 

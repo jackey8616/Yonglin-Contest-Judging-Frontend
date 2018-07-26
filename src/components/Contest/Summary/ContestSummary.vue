@@ -65,8 +65,11 @@ export default {
     },
     fetchData: function () {
       this.$ajax({
-        'method': 'GET',
-        'url': 'http://' + this.$backend + '/api/contest/info?' + this.contestName
+        method: 'POST',
+        url: 'http://' + this.$backend + '/api/contest/info',
+        params: {
+          'selected': this.contestName
+        }
       }).then(response => {
         if (response.data.status === 'success') {
           this.$toasted.success('成功獲取比賽資料！')

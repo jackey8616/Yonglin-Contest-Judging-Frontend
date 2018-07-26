@@ -108,7 +108,7 @@ export default {
     cancelCreate: function () {
       this.$localStorage.clear('create-contest-cache')
       this.$toasted.info('比賽已取消建立, 暫存清空!')
-      this.$router.push({ path: '/' })
+      this.$router.go(-1)
     },
     prevSlide: function () {
       if (this.$refs.swiper.swiper.slidePrev()) {

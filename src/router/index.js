@@ -1,19 +1,25 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 
-import HelloWorld from '@/components/HelloWorld'
+import Login from '@/components/Login'
+import Dashboard from '@/components/Dashboard'
 import ContestCreate from '@/components/Contest/Create/ContestCreate'
 import ContestSummary from '@/components/Contest/Summary/ContestSummary'
 import ContestMark from '@/components/Contest/Mark/ContestMark'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
+export default new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'Home',
+      component: Login
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
     },
     {
       path: '/contest-create',
@@ -30,5 +36,6 @@ export default new Router({
       name: 'ContestMark',
       component: ContestMark
     }
-  ]
+  ],
+  mode: 'history'
 })

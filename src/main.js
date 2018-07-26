@@ -14,6 +14,20 @@ import moment from 'moment-timezone'
 
 import ContestCreate from '@/components/Contest/Create/ContestCreate'
 
+router.beforeEach((to, from, next) => {
+  const isLogin = localStorage.getItem('token') !== null
+  if (isLogin) {
+    next()
+  } else {
+    if (to.path !== '/') {
+      next('/')
+      // next('/login')
+    } else {
+      next()
+    }
+  }
+})
+
 Vue.config.productionTip = false
 // Vue.prototype.$backend = '192.168.0.7:8000'
 Vue.prototype.$backend = '127.0.0.1:8000'
