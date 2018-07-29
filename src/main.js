@@ -21,7 +21,7 @@ Vue.prototype.$backend = '127.0.0.1:8000'
 Vue.prototype.$ajax = Axios
 
 router.beforeEach((to, from, next) => {
-  const isLogin = window.JSON.parse(localStorage.getItem('ycjf'))['user-token'] !== undefined
+  const isLogin = window.JSON.parse(localStorage.getItem('ycjf')) !== undefined
   if (isLogin) {
     next()
   } else {

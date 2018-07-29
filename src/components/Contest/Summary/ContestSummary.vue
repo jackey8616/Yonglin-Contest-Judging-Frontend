@@ -18,6 +18,7 @@
           <swiper-slide><judge ref="judge" :title="'評審資訊'" :judge="contest.judge" :editable="false" :increasable="false"/></swiper-slide>
           <swiper-slide><term ref="term" :title="'評分項目資訊'" :term="contest.term" :editable="false" :increasable="false"/></swiper-slide>
           <swiper-slide><team ref="team" :title="'參賽隊伍資訊'" :team="contest.team" :editable="false" :increasable="false"/></swiper-slide>
+          <swiper-slide><score ref="score" :title="'評分'" :contest="contest" :editable="false" :increasable="false"/></swiper-slide>
           <div class="swiper-pagination" slot="pagination"></div>
         </swiper>
       </div>
@@ -33,10 +34,11 @@ import Info from '@/components/Contest/Info'
 import Judge from '@/components/Contest/Judge'
 import Term from '@/components/Contest/Term'
 import Team from '@/components/Contest/Team'
+import Score from '@/components/Contest/Score'
 
 export default {
   name: 'contest-summary',
-  components: { swiper, swiperSlide, Query, Info, Judge, Term, Team },
+  components: { swiper, swiperSlide, Query, Info, Judge, Term, Team, Score },
   mounted () {
     if (this.$route.params.contestName !== undefined) {
       this.contestName = this.$route.params.contestName
@@ -45,7 +47,7 @@ export default {
   },
   data () {
     return {
-      keys: [ 'info', 'judge', 'term', 'team' ],
+      keys: [ 'info', 'judge', 'term', 'team', 'mark' ],
       slideIndex: 0,
       contestName: null,
       contest: null,
