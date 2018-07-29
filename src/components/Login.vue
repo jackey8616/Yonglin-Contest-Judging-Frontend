@@ -32,16 +32,18 @@ export default {
         console.log(response.data)
         if (response.data.status === 'success') {
           this.$toasted.success('登入成功！')
-          localStorage.setItem('token', JSON.stringify(response.data.data))
+          this.$localStorage.save({ 'user-token': response.data.data })
           this.$router.push({ path: '/dashboard' })
         } else if (response.data.status === 'failed') {
-          this.$toasted.success('登入失敗！')
+          this.$toasted.error('登入失敗！')
           console.log(response.data.detail)
         }
       }).catch(response => {
         console.log(response)
-        this.$toasted.success('登入失敗！')
+        this.$toasted.error('登入失敗！')
       })
+      this.account = null
+      this.passwd = null
     }
   }
 }

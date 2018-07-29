@@ -9,13 +9,13 @@
           <tr class="table-primary">
             <td v-if="editable || increasable">動作</td>
             <td>#</td>
+            <td>相依</td>
             <td>名稱</td>
             <td>權重</td>
-            <td>相依</td>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(term, index) in term.terms" :key="term.id" v-if="edit.index != index">
+          <tr v-for="(termm, index) in term.terms" :key="termm.id" v-if="edit.index != index">
             <td v-if="editable || increasable">
               <div v-if="editable">
                 <button @click="selectEdit(index)" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'pen']"/> 編輯</button>
@@ -23,10 +23,10 @@
                 <button @click="removeTerm(index)" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'minus-circle']"/> 刪除</button>
               </div>
             </td>
-            <td>{{ term.id }}</td>
-            <td>{{ term.name }}</td>
-            <td>{{ term.weight }}</td>
-            <td>{{ term.depend === null ? 'N/A' : term.depend }}</td>
+            <td>{{ termm.id }}</td>
+            <td>{{ termm.depend ? termm.depend : termm.name }}</td>
+            <td>{{ termm.depend ? termm.name : '' }}</td>
+            <td>{{ termm.weight }}</td>
           </tr>
           <tr v-else>
             <td v-if="editable || increasable">
@@ -38,35 +38,35 @@
             </td>
             <td>{{ edit.id }}</td>
             <td>
-              <input v-model="edit.name" :class="getContorlClass(nameDuplicate = nameInvalid(edit.id, edit.name))" type="text" placeholder="名稱"/>
-              <div v-if="nameDuplicate" style="color: RED;">名稱重複！</div>
-            </td>
-            <td><input v-model="edit.weight" :class="getContorlClass(false)" type="text" placeholder="權重"/></td>
-            <td>
               <select v-model="edit.depend" class="form-control">
                 <option value="null">None</option>
-                <option v-for="term in term.terms" :key="term.id" :value="term.name">
+                <option v-for="term in term.terms" v-if="term.depend === null"  :key="term.id" :value="term.name">
                   {{ term.name }}
                 </option>
               </select>
             </td>
+            <td>
+              <input v-model="edit.name" :class="getContorlClass(nameDuplicate = nameInvalid(edit.id, edit.name))" type="text" placeholder="名稱"/>
+              <div v-if="nameDuplicate" style="color: RED;">名稱重複！</div>
+            </td>
+            <td><input v-model="edit.weight" :class="getContorlClass(false)" type="text" placeholder="權重"/></td>
           </tr>
           <tr v-if="edit.index === null && increasable">
             <td><button @click="addTerm()" :disabled="add.name == null || nameDuplicate" class="btn btn-sm"><font-awesome-icon :icon="['fas', 'plus-circle']"/> 新增</button></td>
+            <td>
+              <select v-model="add.depend" class="form-control">
+                <option value="null">None</option>
+                <option v-for="term in term.terms" v-if="term.depend === null" :key="term.id" :value="term.name">
+                  {{ term.name }}
+                </option>
+              </select>
+            </td>
             <td>{{ term.terms.length }}</td>
             <td>
               <input v-model="add.name" :class="getContorlClass(nameDuplicate = nameInvalid(add.id, add.name))" type="text" placeholder="名稱"/>
               <div v-if="nameDuplicate" style="color: RED;">姓名重複！</div>
             </td>
             <td><input v-model="add.weight" :class="getContorlClass(false)" type="text" placeholder="信箱"/></td>
-            <td>
-              <select v-model="add.depend" class="form-control">
-                <option value="null">None</option>
-                <option v-for="term in term.terms" :key="term.id" :value="term.name">
-                  {{ term.name }}
-                </option>
-              </select>
-            </td>
           </tr>
         </tbody>
       </table>

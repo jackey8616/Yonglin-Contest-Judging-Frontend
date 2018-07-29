@@ -48,7 +48,7 @@
             <td>
               <p>{{ edit.term.toString() }}</p>
               <select v-model="selectedTerm">
-                <option v-for="term in terms" :key="term.name">
+                <option v-for="term in terms" v-if="term.depend !== null" :key="term.name">
                   {{ term.name }}
                 </option>
               </select>
@@ -72,7 +72,7 @@
             <td>
               <p>{{ add.term.toString() }}</p>
               <select v-model="selectedTerm">
-                <option v-for="term in terms" :key="term.name">
+                <option v-for="term in terms" v-if="term.depend !== null" :key="term.name">
                   {{ term.name }}
                 </option>
               </select>
