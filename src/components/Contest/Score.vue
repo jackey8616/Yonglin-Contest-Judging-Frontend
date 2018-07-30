@@ -4,6 +4,8 @@
       <h1>{{ title }}</h1>
     </div>
     <div v-if="contest !== null" class="col-md-8 offset-md-2">
+      <div v-if="contest.summation !== undefined">
+      </div>
       <div v-if="contest.final !== undefined">
         <table class="table table-striped">
           <thead>
@@ -79,9 +81,13 @@ export default {
     getFinalTerm: function (final) {
       let terms = []
       let termsWeight = []
+      let termsSummation = null
+      console.log(final)
       for (let team in final) {
         for (let term in final[team]) {
-          if (term.includes('_weight')) {
+          if (term === 'summation') {
+            termsSummation = term
+          } else if (term.includes('_weight')) {
             termsWeight.push(term)
           } else {
             terms.push(term)
@@ -89,7 +95,7 @@ export default {
         }
         break
       }
-      return terms.concat(termsWeight)
+      return terms.concat(termsWeight).concat(termsSummation)
     }
   }
 }

@@ -2,7 +2,7 @@
   <div v-if="judge !== null">
     評審：{{ judge.name }}
     <div v-if="contest === null">
-      <select v-model="selectedContest">
+      <select v-model="selectedContest" class="form-control">
         <option v-for="(contest, index) in judge.contests" :key="index">
           {{ index }}
         </option>
