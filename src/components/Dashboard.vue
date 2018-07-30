@@ -1,10 +1,10 @@
 <template>
   <div v-if="info !== undefined && info !== null">
     <div>
-      <router-link to="/contest-summary" tag="button" class="btn btn-md">比賽資訊</router-link>
-      <router-link v-if="info.admin" to="/contest-create" tag="button" class="btn btn-md">建立新比賽</router-link>
-      <router-link :to="{ path: '/contest-mark/' + info.email }" tag="button" class="btn btn-md">評分比賽</router-link>
-      <button @click="logout" class="btn btn-md">登出</button>
+      <router-link to="/contest-summary" tag="button" class="btn btn-md btn-primary">比賽資訊</router-link>
+      <router-link v-if="info.admin" to="/contest-create" tag="button" class="btn btn-md btn-primary">建立新比賽</router-link>
+      <router-link :to="{ path: '/contest-mark/' + info.email }" tag="button" class="btn btn-md btn-primary">評分比賽</router-link>
+      <button @click="logout" class="btn btn-md btn-warning">登出</button>
       <br>
     </div>
     <div>

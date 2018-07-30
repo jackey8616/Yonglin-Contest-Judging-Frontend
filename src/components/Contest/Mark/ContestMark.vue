@@ -28,6 +28,7 @@
         </tbody>
       </table>
       <button @click="submitMark" class="btn btn-md">評分送出</button>
+      <button @click="$router.go(-1)" class="btn btn-md btn-danger">上一頁</button>
     </div>
   </div>
 </template>
