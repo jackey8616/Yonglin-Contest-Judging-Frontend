@@ -1,6 +1,10 @@
 <template>
   <div v-if="judge !== null">
     評審：{{ judge.name }}
+    <ul>
+      <li>每項評分請評審自行注意控制於0 ~ 10之間。</li>
+      <li>評分可以是小數，並沒有限制位數。</li>
+    </ul>
     <div v-if="contest === null">
       <select v-model="selectedContest" class="form-control">
         <option v-for="(contest, index) in judge.contests" :key="index">
